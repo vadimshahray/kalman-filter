@@ -1,7 +1,7 @@
 import '@fontsource/inter'
 import { ReduxProvider } from '@providers/ReduxProvider'
 import { ThemeProvider } from '@providers/ThemeProvider'
-import { MainPage } from './MainPage'
+import { MainPage } from '@pages'
 
 function App() {
   return (

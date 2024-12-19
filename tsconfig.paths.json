@@ -2,10 +2,12 @@
   "compilerOptions": {
     "paths": {
       "@components": ["src/components"],
-      "@constants/*": ["src/constants/*"],
-      "@hooks/*": ["src/hooks/*"],
+      "@constants": ["src/constants"],
+      "@hooks": ["src/hooks"],
+      "@pages": ["src/pages"],
       "@providers/*": ["src/providers/*"],
       "@slices/*": ["src/slices/*"],
+      "@styles": ["src/styles"],
       "@utils": ["src/utils"]
     }
   }
