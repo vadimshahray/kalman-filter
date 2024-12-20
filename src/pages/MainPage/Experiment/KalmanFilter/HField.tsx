@@ -15,7 +15,7 @@ export function HField() {
   const experiment = useSelector(selectExperiment)
 
   return (
-    <MatrixFields label="H">
+    <MatrixFields label="H, матрица наблюдений">
       {renderField(H, 0, 0, dispatch)}
 
       {experiment !== 'UAV' && renderField(H, 0, 1, dispatch)}

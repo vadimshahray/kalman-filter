@@ -15,7 +15,7 @@ export function QField() {
   const experiment = useSelector(selectExperiment)
 
   return (
-    <MatrixFields label="Q">
+    <MatrixFields label="Q, шум процесса">
       {renderField(Q, 0, 0, dispatch)}
 
       {experiment !== 'UAV' && renderField(Q, 0, 1, dispatch)}

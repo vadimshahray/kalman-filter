@@ -15,7 +15,7 @@ export function RField() {
   const experiment = useSelector(selectExperiment)
 
   return (
-    <MatrixFields label="R">
+    <MatrixFields label="R, шум измерений">
       {renderField(R, 0, 0, dispatch)}
 
       {experiment !== 'UAV' && renderField(R, 0, 1, dispatch)}

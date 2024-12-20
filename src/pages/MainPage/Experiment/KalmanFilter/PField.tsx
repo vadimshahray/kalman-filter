@@ -15,7 +15,7 @@ export function PField() {
   const experiment = useSelector(selectExperiment)
 
   return (
-    <MatrixFields label="P">
+    <MatrixFields label="P, ковариционная матрица состояния">
       {renderField(P, 0, 0, dispatch)}
 
       {experiment !== 'UAV' && renderField(P, 0, 1, dispatch)}
