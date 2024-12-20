@@ -1,7 +1,7 @@
 export class MassSpringDamper {
   private m: number // масса
   private k: number // жесткость пружины
-  private b: number // коэффициент демпфирования
+  private с: number // коэффициент демпфирования
   private x: number // позиция
   private v: number // скорость
   private dt: number // шаг по времени
@@ -10,7 +10,7 @@ export class MassSpringDamper {
   constructor({ m, k, c, initP, initV, deltaT }: MassSpringDamperInput) {
     this.m = m
     this.k = k
-    this.b = c
+    this.с = c
     this.x = initP
     this.v = initV
     this.dt = deltaT
@@ -18,19 +18,13 @@ export class MassSpringDamper {
     this.time = 0
   }
 
-  // Функция для обновления состояния системы
-  update() {
-    // Вычисляем силу по второму закону Ньютона
-    const forceSpring = -this.k * this.x // сила пружины
-    const forceDamping = -this.b * this.v // сила демпфера
-    const acceleration = (forceSpring + forceDamping) / this.m // ускорение
+  update2(): { position: number; velocity: number } {
+    const a = (-this.с * this.v - this.k * this.x) / this.m
 
-    // Обновляем скорость и позицию с использованием метода Эйлера
-    this.v += acceleration * this.dt
+    this.v += a * this.dt
     this.x += this.v * this.dt
 
-    // Обновляем время
-    this.time += this.dt
+    return { position: this.x, velocity: this.v }
   }
 
   // Функция для получения текущего состояния системы

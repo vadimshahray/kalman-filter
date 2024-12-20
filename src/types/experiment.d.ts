@@ -9,3 +9,11 @@ type MsdCalculations = {
 
   noise: number[]
 }
+
+type SimpleCalculations = {
+  ideal: number[]
+  noised: number[]
+  filtered: number[]
+
+  noise: number[]
+}

@@ -7,12 +7,14 @@ export type SliderTextFieldProps = {
   min: number
   max: number
   step: number
-  label: string
+  label?: string
   adornment?: string
   endIconTooltip?: string
   EndIcon?: Icon
   value: number
   onChange: (value: number) => void
+  maxWidth?: number
+  noSlide?: boolean
 }
 
 export const SliderTextField = ({
@@ -25,6 +27,8 @@ export const SliderTextField = ({
   min,
   max,
   step,
+  maxWidth,
+  noSlide,
 }: SliderTextFieldProps) => {
   const [fieldValue, setFieldValue] = useState(value.toString())
   const [sliderValue, setSliderValue] = useState(value)
@@ -70,7 +74,7 @@ export const SliderTextField = ({
   )
 
   return (
-    <Stack>
+    <Stack flex={1} minWidth={10} maxWidth={maxWidth}>
       <ValidatedTextField
         label={label}
         adornment={adornment}
@@ -81,23 +85,25 @@ export const SliderTextField = ({
         onValid={onTextFieldValid}
       />
 
-      <Container
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          paddingY: 0,
-        }}
-      >
-        <Slider
-          size="sm"
-          min={min}
-          max={max}
-          step={step}
-          value={sliderValue}
-          onChange={onSliderChange}
-          onChangeCommitted={onSliderChangeCommitted}
-        />
-      </Container>
+      {!noSlide && (
+        <Container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingY: 0,
+          }}
+        >
+          <Slider
+            size="sm"
+            min={min}
+            max={max}
+            step={step}
+            value={sliderValue}
+            onChange={onSliderChange}
+            onChangeCommitted={onSliderChangeCommitted}
+          />
+        </Container>
+      )}
     </Stack>
   )
 }

@@ -1,8 +1,8 @@
 type Kt = number
 
 type KalmanFilterInput = {
-  F: Kt
-  H: Kt
-  Q: Kt
-  R: Kt
+  P: number[][]
+  H: number[][]
+  Q: number[][]
+  R: number[][]
 }

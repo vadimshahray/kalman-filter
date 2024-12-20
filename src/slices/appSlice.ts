@@ -1,6 +1,13 @@
-import { ITERATIONS_default, KALMAN_defaults, MSD, MSD_defaults, UAV } from '@constants'
+import {
+  ITERATIONS_default,
+  KALMAN_defaults,
+  KALMAN_defaults_simple,
+  MSD,
+  MSD_defaults,
+  UAV,
+} from '@constants'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { generateMsdData } from '@utils'
+import { generateMsdData, generateSimpleData } from '@utils'
 
 type Experiments = typeof MSD | typeof UAV
 
@@ -9,8 +16,8 @@ type State = {
   experimentsInput: Record<Experiments, MassSpringDamperInput>
 
   iterations: number
-  KalmanInput: KalmanFilterInput
-  calculations: MsdCalculations
+  KalmanInput: Record<Experiments, KalmanFilterInput>
+  calculations: MsdCalculations | SimpleCalculations
 }
 
 export const appSlice = createSlice({
@@ -23,7 +30,10 @@ export const appSlice = createSlice({
       UAV: { ...MSD_defaults },
     },
 
-    KalmanInput: KALMAN_defaults,
+    KalmanInput: {
+      MSD: KALMAN_defaults,
+      UAV: KALMAN_defaults_simple,
+    },
 
     iterations: ITERATIONS_default,
 
@@ -31,32 +41,28 @@ export const appSlice = createSlice({
   } satisfies State as State,
 
   reducers: {
-    setState(state, { payload }: PayloadAction<Partial<State>>) {
-      return { ...state, ...payload }
+    setExperiment(state, { payload }: PayloadAction<Experiments>) {
+      console.log(payload)
+      state.experiment = payload
+
+      state.calculations = getGeneratedData(state)
     },
 
     setCount(state, { payload }: PayloadAction<number | null>) {
       state.iterations = payload ?? 0
 
-      if (state.iterations >= 0) {
-        state.calculations = generateMsdData(
-          state.iterations,
-          state.KalmanInput,
-          state.experimentsInput['MSD'],
-        )
-      }
+      state.calculations = getGeneratedData(state)
     },
 
-    setInput(state, { payload }: PayloadAction<Partial<State['KalmanInput']>>) {
-      state.KalmanInput = { ...state.KalmanInput, ...payload }
+    setInput(
+      state,
+      {
+        payload,
+      }: PayloadAction<{ name: keyof KalmanFilterInput; value: number; i: number; j: number }>,
+    ) {
+      state.KalmanInput[state.experiment][payload.name][payload.i][payload.j] = payload.value
 
-      if (state.iterations >= 0) {
-        state.calculations = generateMsdData(
-          state.iterations,
-          state.KalmanInput,
-          state.experimentsInput['MSD'],
-        )
-      }
+      state.calculations = getGeneratedData(state)
     },
 
     setExperimentInput<E extends Experiments>(
@@ -70,25 +76,40 @@ export const appSlice = createSlice({
     ) {
       state.experimentsInput[experiment] = { ...state.experimentsInput[experiment], ...input }
 
-      if (state.iterations >= 0) {
-        state.calculations = generateMsdData(
-          state.iterations,
-          state.KalmanInput,
-          state.experimentsInput['MSD'],
-        )
-      }
+      state.calculations = getGeneratedData(state)
     },
   },
   selectors: {
     selectExperiment: (state) => state.experiment,
     selectMsdInput: (state) => state.experimentsInput['MSD'],
+    selectSimpleInput: (state) => state.experimentsInput['UAV'],
     selectCount: (state) => state.iterations,
-    selectInput: (state) => state.KalmanInput,
+    selectInput: (state) => state.KalmanInput[state.experiment],
     selectCalculations: (state) => state.calculations,
   },
 })
 
-export const { setState, setCount, setInput, setExperimentInput } = appSlice.actions
+export const { setExperiment, setCount, setInput, setExperimentInput } = appSlice.actions
 
-export const { selectExperiment, selectCount, selectMsdInput, selectInput, selectCalculations } =
-  appSlice.getSelectors((s: RootState) => s.app)
+export const {
+  selectExperiment,
+  selectCount,
+  selectMsdInput,
+  selectSimpleInput,
+  selectInput,
+  selectCalculations,
+} = appSlice.getSelectors((s: RootState) => s.app)
+
+function getGeneratedData(state: State) {
+  console.log(state.experiment)
+
+  if (state.experiment === 'UAV') {
+    return generateSimpleData(state.iterations, { ...state.KalmanInput[state.experiment] })
+  }
+
+  return generateMsdData(
+    state.iterations,
+    { ...state.KalmanInput[state.experiment] },
+    { ...state.experimentsInput[state.experiment] },
+  )
+}

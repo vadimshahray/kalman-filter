@@ -21,6 +21,7 @@ export function CountField() {
       max={2000}
       step={10}
       adornment="I"
+      maxWidth={400}
     />
   )
 }

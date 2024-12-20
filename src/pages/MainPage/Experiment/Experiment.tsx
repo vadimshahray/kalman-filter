@@ -1,9 +1,10 @@
 import { Tab, TabList, TabPanel, Tabs } from '@mui/joy'
 import { MassSpringDamper } from './MassSpringDamper'
 import { useSelector } from 'react-redux'
-import { selectExperiment, setState } from '@slices/appSlice'
+import { selectExperiment, setExperiment } from '@slices/appSlice'
 import { useAppDispatch } from '@hooks'
 import { MSD, UAV } from '@constants'
+import { KalmanFilter } from './KalmanFilter'
 
 export function Experiment() {
   const dispatch = useAppDispatch()
@@ -14,20 +15,22 @@ export function Experiment() {
     <Tabs
       aria-label="Basic tabs"
       value={experiment}
-      onChange={(_, value) => dispatch(setState({ experiment: value as any }))}
+      onChange={(_, value) => dispatch(setExperiment(value as any))}
     >
       <TabList>
         <Tab value={MSD}>Масса-пружина-демпфер</Tab>
 
-        <Tab value={UAV}>Беспилотник</Tab>
+        <Tab value={UAV}>Простой</Tab>
       </TabList>
 
       <TabPanel value={MSD}>
         <MassSpringDamper />
+
+        <KalmanFilter />
       </TabPanel>
 
       <TabPanel value={UAV}>
-        <b>Second</b> tab panel
+        <KalmanFilter />
       </TabPanel>
     </Tabs>
   )

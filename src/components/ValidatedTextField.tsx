@@ -5,7 +5,7 @@ import { AnyObject, object, ValidationError, NumberSchema } from 'yup'
 /** Пропсы `ValidatedTextField` */
 export type ValidatedTextFieldProps = {
   /** Ярлык поля */
-  label: string
+  label?: string
   value?: string
   /** Числовое правило валидации */
   rule: NumberSchema<number, AnyObject>

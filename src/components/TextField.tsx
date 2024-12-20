@@ -45,6 +45,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
               ref,
             },
           }}
+          sx={{ flex: 1 }}
         />
       )}
     </FormField>
